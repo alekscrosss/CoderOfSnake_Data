@@ -5,7 +5,8 @@ import os
 from sqlalchemy import engine_from_config, create_engine
 from sqlalchemy import pool
 from alembic import context
-from src.db.models import Base
+from src.db.models import Base #06/06/2024 Olha
+
 from dotenv import load_dotenv
 load_dotenv()
 
