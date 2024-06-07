@@ -9,8 +9,8 @@ from starlette.responses import HTMLResponse
 from src.db.database import get_db
 from fastapi.templating import Jinja2Templates
 
+from src.routes import upload_entry_photo, upload_exit_photo, routes_auth, payment
 
-from src.routes import routes_auth
 
 app = FastAPI()
 
@@ -48,4 +48,6 @@ def healthchecker(db: Session = Depends(get_db)):
 
 
 app.include_router(routes_auth.router, prefix='/api')
-
+app.include_router(upload_entry_photo.router, prefix='/entry_photo')
+app.include_router(upload_exit_photo.router, prefix='/exit_photo')
+app.include_router(payment.router, prefix='/payment')
