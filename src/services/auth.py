@@ -7,7 +7,8 @@ from fastapi import Depends, HTTPException, status
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer  
 from sqlalchemy.orm import Session
-from jose import JWTError, jwt
+from jose import jwt
+from jose import JWTError
 
 from src.db.database import get_db
 from src.crud import crud_users as repository_users
