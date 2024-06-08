@@ -61,6 +61,10 @@ async def login_form(request: Request):
 async def confirmation_page(request: Request):
     return templates.TemplateResponse('confirmation.html', {"request": request, "title": "Email Confirmation"})
 
+@app.get("/confirmation_result", response_class=HTMLResponse)
+async def confirmation_page(request: Request):
+    return templates.TemplateResponse('confirmation_result.html', {"request": request, "title": "Email Confirmation"})
+
 
 @app.get("/home", response_class=HTMLResponse)
 async def confirmation_page(request: Request):
