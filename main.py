@@ -12,14 +12,15 @@ from src.db.database import get_db
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
+from src.routes import upload_entry_photo, upload_exit_photo, routes_auth, payment
 
-from src.routes import routes_auth
 
 app = FastAPI()
 
 # Монтування папки static
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory='templates')
+app.mount("/scripts", StaticFiles(directory="scripts"), name="scripts")
 
 # # Fetch the Redis host from environment variable
 # REDIS_HOST = os.environ.get("REDIS_HOST")
@@ -48,6 +49,7 @@ async def root(request: Request):
     return templates.TemplateResponse('index.html', {"request": request, "title": "Car numbers aрр"})
 
 # Route for registration form
+# Route for registration form
 @app.get("/signup", response_class=HTMLResponse, description="Sign Up Page")
 async def signup_page(request: Request):
     return templates.TemplateResponse('signup.html', {"request": request, "title": "Sign Up"})
@@ -56,14 +58,6 @@ async def signup_page(request: Request):
 @app.get("/login")
 async def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
-
-@app.get("/confirmation", response_class=HTMLResponse)
-async def confirmation_page(request: Request):
-    return templates.TemplateResponse('confirmation.html', {"request": request, "title": "Email Confirmation"})
-
-@app.get("/confirmation_result", response_class=HTMLResponse)
-async def confirmation_page(request: Request):
-    return templates.TemplateResponse('confirmation_result.html', {"request": request, "title": "Email Confirmation"})
 
 
 @app.get("/home", response_class=HTMLResponse)
@@ -95,4 +89,6 @@ def healthchecker(db: Session = Depends(get_db)):
 
 
 app.include_router(routes_auth.router, prefix='/api')
-
+app.include_router(upload_entry_photo.router, prefix='/entry_photo')
+app.include_router(upload_exit_photo.router, prefix='/exit_photo')
+app.include_router(payment.router, prefix='/payment')

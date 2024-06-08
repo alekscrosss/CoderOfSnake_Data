@@ -41,7 +41,6 @@ class Vehicle(Base):
     parking_sessions = relationship("ParkingSession", back_populates="vehicle")
     registered_user = relationship("RegisteredUser", back_populates="vehicle", uselist=False)
 
-
 class ParkingSession(Base):
     __tablename__ = "parking_sessions"
 

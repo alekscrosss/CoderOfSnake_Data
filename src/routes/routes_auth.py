@@ -1,7 +1,7 @@
 # file routers/comments.py
 from typing import List
 from urllib import request
-
+from fastapi import Form
 from fastapi import Depends, HTTPException, status,  APIRouter,  Security, BackgroundTasks, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -31,7 +31,6 @@ app = FastAPI()
 templates = Jinja2Templates(directory='templates')
 
 
-
 @router.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def signup(body: UserModel, background_tasks: BackgroundTasks, request: Request, db: Session = Depends(get_db)):
     exist_user = await repository_users.get_user_by_email(body.email, db)
@@ -40,37 +39,38 @@ async def signup(body: UserModel, background_tasks: BackgroundTasks, request: Re
     body.password = auth_service.get_password_hash(body.password)
     new_user = await repository_users.create_user(body, db)
     background_tasks.add_task(send_email, new_user.email, new_user.username, str(request.base_url))
-    # return new_user
-     # Redirect to request_email page after successful registration
-    # return RedirectResponse(url="/confirmation", status_code=status.HTTP_303_SEE_OTHER)
     return new_user
 
+
 @router.post("/login", response_model=TokenModel)
-async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = await repository_users.get_user_by_email(body.username, db)
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email")
-    #якщо емейл не підтверджений  нас не пусте залогіниться
-    if not user.confirmed:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Email not confirmed")
-    if not auth_service.verify_password(body.password, user.password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
-    # Generate JWT
-    access_token = await auth_service.create_access_token(data={"sub": user.email})
-    refresh_token = await auth_service.create_refresh_token(data={"sub": user.email})
-    await repository_users.update_token(user, refresh_token, db)
-    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
-    # return RedirectResponse(url="/home", status_code=status.HTTP_303_SEE_OTHER)
+async def login(request: Request, username: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
+    try:
+        user = await repository_users.get_user_by_email(username, db)
+        if user is None:
+            return templates.TemplateResponse("login.html", {"request": request, "message": "Invalid email"})
+        if not user.confirmed:
+            return templates.TemplateResponse("login.html", {"request": request, "message": "Email not confirmed"})
+        if not auth_service.verify_password(password, user.password):
+            return templates.TemplateResponse("login.html", {"request": request, "message": "Invalid password"})
+
+        # Generate JWT
+        access_token = await auth_service.create_access_token(data={"sub": user.email})
+        refresh_token = await auth_service.create_refresh_token(data={"sub": user.email})
+        await repository_users.update_token(user, refresh_token, db)
+
+        return templates.TemplateResponse("home.html", {"request": request, "message": "Login successful"})
+
+    except Exception as e:
+        print(f"Error during login: {e}")
+        return templates.TemplateResponse("login.html", {"request": request, "message": "Internal server error"})
+
+
 
 
 @router.get("/home")
 async def home(request: Request, current_user: User = Depends(get_current_user)):
     username = current_user.username
     return templates.TemplateResponse("home.html", {"request": request, "username": username})
-
-# @router.get("/confirmation", response_class=HTMLResponse)
-# async def confirmation_page(request: Request):
-#     return templates.TemplateResponse("confirmation.html", {"request": request})
 
 router.get("/logout")
 async def logout(request: Request, response: Response):
@@ -94,7 +94,7 @@ async def refresh_token(credentials: HTTPAuthorizationCredentials = Security(sec
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 
-@router.get('/confirmed_email/{token}')
+@router.get('/confirmed_email/{token}', response_class=HTMLResponse)
 async def confirmed_email(token: str, db: Session = Depends(get_db)):
 
     email =  auth_service.get_email_from_token(token)
@@ -102,9 +102,11 @@ async def confirmed_email(token: str, db: Session = Depends(get_db)):
     if user is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Verification error")
     if user.confirmed:
-        return {"message": "Your email is already confirmed"}
+        return templates.TemplateResponse('login.html', {"request": {}, "title": "Email Confirmation", "message": "Your email is already confirmed"})
     await repository_users.confirmed_email(email, db)
-    return {"message": "Email confirmed"}
+    # Redirect user to login page after confirming email
+    return RedirectResponse(url="/login")
+
 
 @router.post('/request_email')
 async def request_email(body: RequestEmail, background_tasks: BackgroundTasks, request: Request,

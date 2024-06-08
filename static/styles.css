@@ -50,3 +50,20 @@ button {
 button:hover {
     background-color: #4cae4c;
 }
+
+.container {
+    width: 300px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.form-container {
+    margin-top: 20px;
+}
+
+.error-message {
+    position: relative;
+    bottom: -180px;
+    right: 14%
+
+}

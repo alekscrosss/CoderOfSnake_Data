@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Authentication</title>
     <link rel="stylesheet" href="static/styles.css">
+
 </head>
 <body>
     <div class="container">
@@ -13,7 +14,7 @@
         <!-- Registration Form -->
         <div class="form-container">
             <h2>Register</h2>
-             <form id="registerForm" action="/signup" method="post">
+             <form id="registerForm">
                 <label for="regUsername">Username:</label>
                 <input type="text" id="regUsername" name="username" required>
 
@@ -23,9 +24,11 @@
                 <label for="regPassword">Password:</label>
                 <input type="password" id="regPassword" name="password" required>
 
-                <button type="submit">Register</button>
+                <button type="button" onclick="registerUser()">Register</button>
             </form>
+            <div id="message"></div> <!-- Message container -->
         </div>
     </div>
+    <script src="scripts/register.js"></script>
 </body>
 </html>
