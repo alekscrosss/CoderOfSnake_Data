@@ -1,0 +1,14 @@
+ .container {
+            text-align: center;
+        }
+        .form-container {
+            margin-top: 20px;
+        }
+        #message {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #dff0d8; /* Bootstrap's success color */
+            border: 1px solid #d0e9c6; /* Bootstrap's success border color */
+            color: #3c763d; /* Bootstrap's success text color */
+            display: none; /* Hide message by default */
+        }
