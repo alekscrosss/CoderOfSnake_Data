@@ -12,7 +12,7 @@ from src.db.database import get_db
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
-from src.routes import upload_entry_photo, upload_exit_photo, routes_auth, payment
+from src.routes import upload_entry_photo, upload_exit_photo, routes_auth, payment, admin_reports #olha
 
 
 app = FastAPI()
@@ -92,3 +92,4 @@ app.include_router(routes_auth.router, prefix='/api')
 app.include_router(upload_entry_photo.router, prefix='/entry_photo')
 app.include_router(upload_exit_photo.router, prefix='/exit_photo')
 app.include_router(payment.router, prefix='/payment')
+app.include_router(admin_reports.router, prefix='/reports') #olha

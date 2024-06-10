@@ -1,0 +1,2 @@
+id,username,email,password,refresh_token,role,confirmed,status_ban,created_at,updated_at
+1,olha,olgaverbovap@gmail.com,$2b$12$kehfnsNLcA6bpvazbLRSVuwFyWXwc6MopU.2TmOfptsePljKW7jm.,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJvbGdhdmVyYm92YXBAZ21haWwuY29tIiwiaWF0IjoxNzE4MDIwMDcyLCJleHAiOjE3MTg2MjQ4NzIsInNjb3BlIjoicmVmcmVzaF90b2tlbiJ9.CZizu4GZRBQQgBmY8WMA_KSBXaL4jyNHssmWNAks8-U,admin,True,False,2024-06-09 13:57:10.014043,2024-06-10 11:47:51.846011
