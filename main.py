@@ -104,3 +104,4 @@ app.include_router(routes_auth.router, prefix='/api')
 app.include_router(upload_entry_photo.router, prefix='/entry_photo')
 app.include_router(upload_exit_photo.router, prefix='/exit_photo')
 app.include_router(payment.router, prefix='/payment')
+
