@@ -1,18 +1,20 @@
 # file main.py
 import os
 import time
+from datetime import datetime
 
 import redis
-from fastapi import Request
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import Request, UploadFile
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from starlette.responses import HTMLResponse
+from starlette.responses import HTMLResponse, JSONResponse
 from src.db.database import get_db
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-
-from src.routes import upload_entry_photo, upload_exit_photo, routes_auth, payment, admin_reports #olha
+from fastapi import FastAPI, UploadFile, File, Form, Depends, HTTPException
+from src.services.auth import auth_service
+from src.db.models import User
+from src.routes import upload_entry_photo, upload_exit_photo, routes_auth, payment
 
 
 app = FastAPI()
@@ -60,14 +62,24 @@ async def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
-@app.get("/home", response_class=HTMLResponse)
-async def confirmation_page(request: Request):
-    return templates.TemplateResponse('home.html', {"request": request, "title": "Email Confirmation"})
+@app.get("/home")
+async def home(request: Request):
+    return templates.TemplateResponse('home.html', {"request": request, "title": "Personal cabinet"})
+
+# Маршрут для завантаження фотографії
 
 
 @app.get("/logout")
 async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "title": "Car numbers aрр"})
+
+@app.get('/upload-entry-photo')
+async def home(request: Request):
+    return templates.TemplateResponse('upload-entry-photo.html', {"request": request, "title": "upload_entry"})
+@app.get('/upload-exit-photo')
+async def home(request: Request):
+    return templates.TemplateResponse('upload-exit-photo.html', {"request": request, "title": "upload_exit"})
+
 
 
 @app.get("/api/healthchecker")
@@ -92,4 +104,4 @@ app.include_router(routes_auth.router, prefix='/api')
 app.include_router(upload_entry_photo.router, prefix='/entry_photo')
 app.include_router(upload_exit_photo.router, prefix='/exit_photo')
 app.include_router(payment.router, prefix='/payment')
-app.include_router(admin_reports.router, prefix='/reports') #olha
+

@@ -8,7 +8,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     console.log('Submitting login form', { email, password });
 
     try {
-        const response = await fetch('/login', {
+        const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -24,18 +24,23 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         if (!response.ok) {
             const errorData = await response.json();
             console.log('Error data:', errorData);
-            if (errorData.detail === "Invalid email") {
+            if (errorData.message === "Invalid email") {
                 message.innerText = 'Invalid email. Please try again.';
-            } else if (errorData.detail === "Email not confirmed") {
+            } else if (errorData.message === "Email not confirmed") {
                 message.innerText = 'Email not confirmed. Please check your email.';
-            } else if (errorData.detail === "Invalid password") {
+            } else if (errorData.message === "Invalid password") {
                 message.innerText = 'Invalid password. Please try again.';
             } else {
                 message.innerText = 'Login failed. Please try again later.';
             }
             message.style.display = 'block';
         } else {
+            const responseData = await response.json();
             console.log('Login successful');
+            // Assuming your backend returns tokens in the response
+            localStorage.setItem('access_token', responseData.access_token);
+            localStorage.setItem('refresh_token', responseData.refresh_token);
+            // Redirect to home.html
             window.location.href = '/home';
         }
     } catch (error) {
