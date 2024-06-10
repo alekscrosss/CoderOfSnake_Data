@@ -20,6 +20,8 @@ app = FastAPI()
 # Монтування папки static
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory='templates')
+app.mount("/scripts", StaticFiles(directory="scripts"), name="scripts")
+
 
 # # Fetch the Redis host from environment variable
 # REDIS_HOST = os.environ.get("REDIS_HOST")
@@ -56,10 +58,6 @@ async def signup_page(request: Request):
 @app.get("/login")
 async def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
-
-@app.get("/confirmation", response_class=HTMLResponse)
-async def confirmation_page(request: Request):
-    return templates.TemplateResponse('confirmation.html', {"request": request, "title": "Email Confirmation"})
 
 
 @app.get("/home", response_class=HTMLResponse)
