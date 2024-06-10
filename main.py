@@ -1,17 +1,19 @@
 # file main.py
 import os
 import time
+from datetime import datetime
 
 import redis
-from fastapi import Request
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import Request, UploadFile
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from starlette.responses import HTMLResponse
+from starlette.responses import HTMLResponse, JSONResponse
 from src.db.database import get_db
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-
+from fastapi import FastAPI, UploadFile, File, Form, Depends, HTTPException
+from src.services.auth import auth_service
+from src.db.models import User
 from src.routes import upload_entry_photo, upload_exit_photo, routes_auth, payment
 
 
@@ -56,18 +58,29 @@ async def signup_page(request: Request):
 
 # Route for login form
 @app.get("/login")
-async def login_form(request: Request):
+async def login_form(request: Request, ):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
-@app.get("/home", response_class=HTMLResponse)
-async def confirmation_page(request: Request):
-    return templates.TemplateResponse('home.html', {"request": request, "title": "Email Confirmation"})
+@app.get("/home")
+async def home(request: Request):
+
+    return templates.TemplateResponse('home.html', {"request": request, "title": "Personal cabinet"})
+
+# Маршрут для завантаження фотографії
 
 
 @app.get("/logout")
 async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "title": "Car numbers aрр"})
+
+@app.get('/upload-entry-photo')
+async def home(request: Request):
+    return templates.TemplateResponse('upload-entry-photo.html', {"request": request, "title": "upload_entry"})
+@app.get('/upload-exit-photo')
+async def home(request: Request):
+    return templates.TemplateResponse('upload-exit-photo.html', {"request": request, "title": "upload_exit"})
+
 
 
 @app.get("/api/healthchecker")

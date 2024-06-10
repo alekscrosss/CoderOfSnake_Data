@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
-     <link rel="stylesheet" href="/static/home.css">
+    <title>Upload Photos</title>
+    <link rel="stylesheet" href="/static/home.css">
 </head>
 <body>
-    <h1>Welcome, {{ username }}!</h1>
-    <p>This is your personal cabinet.</p>
-
-<a href="/logout">LogOut</a>
+    <h2>Upload Photos</h2>
+    <button onclick="window.location.href='/upload-entry-photo'">Upload Entry Photo</button>
+    <button onclick="window.location.href='/upload-exit-photo'">Upload Exit Photo</button>
 </body>
 </html>

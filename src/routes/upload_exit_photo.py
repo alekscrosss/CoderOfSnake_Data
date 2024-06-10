@@ -26,7 +26,7 @@ def calculate_amount_due(entry_time: datetime, exit_time: datetime, rate_per_hou
     return amount_due
 
 
-@router.post("/upload-exit-photo/")
+@router.post("/upload-exit-photo")
 async def upload_exit_photo(
         exit_photo: UploadFile = File(...),
         license_plate: str = Form(...),
@@ -40,7 +40,7 @@ async def upload_exit_photo(
         ).first()
 
         if not db_parking_session:
-            return JSONResponse(content={"error": "Не найдена сессия парковки для данного номерного знака"},
+            return JSONResponse(content={"error": "Немає сеансу паркування за номером"},
                                 status_code=404)
 
         exit_time = datetime.now()
@@ -57,7 +57,7 @@ async def upload_exit_photo(
         # Update the parking session with the exit time and amount due
         update_parking_session_exit_time(db, db_parking_session.id, exit_time, amount_due)
 
-        return JSONResponse(content={"message": "Все ок", "exit_time": exit_time.isoformat(), "amount_due": amount_due})
+        return JSONResponse(content={"message": "Фото завантажено успішно", "exit_time": exit_time.isoformat(), "amount_due": amount_due})
     except Exception as e:
         print(f"Error: {str(e)}")
         return JSONResponse(content={"error": str(e)}, status_code=500)

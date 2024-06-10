@@ -1,4 +1,5 @@
 # file routers/comments.py
+import os
 from typing import List
 from urllib import request
 from fastapi import Form
@@ -6,6 +7,8 @@ from fastapi import Depends, HTTPException, status,  APIRouter,  Security, Backg
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from fastapi.responses import HTMLResponse
+
+from src.db import models
 from src.db.database import get_db
 from src.schemas.schemas_user import UserModel, UserResponse, TokenModel, RequestEmail
 from src.crud import crud_users as repository_users
@@ -17,8 +20,11 @@ from fastapi.responses import RedirectResponse
 from fastapi import Request
 from src.db.models import User
 from fastapi.security import OAuth2PasswordRequestForm
-from src.crud.user_current import get_current_user
+from fastapi import FastAPI, UploadFile, File, Form, Request
+from fastapi.responses import HTMLResponse
+from datetime import datetime
 from fastapi.responses import Response
+from fastapi.security import HTTPBasicCredentials
 from ipaddress import ip_address
 from typing import Callable
 from fastapi.responses import JSONResponse
@@ -55,17 +61,12 @@ async def login(request: Request, username: str = Form(...), password: str = For
         refresh_token = await auth_service.create_refresh_token(data={"sub": user.email})
         await repository_users.update_token(user, refresh_token, db)
 
-        return templates.TemplateResponse("home.html", {"request": request, "message": "Login successful"})
+        # Return JSON with tokens
+        return JSONResponse({"access_token": access_token, "refresh_token": refresh_token})
 
     except Exception as e:
-        print(f"Error during login: {e}")
-        return templates.TemplateResponse("login.html", {"request": request, "message": "Internal server error"})
-
-
-@router.get("/home")
-async def home(request: Request, current_user: User = Depends(get_current_user)):
-    username = current_user.username
-    return templates.TemplateResponse("home.html", {"request": request, "username": username})
+        # Handle exceptions appropriately
+        return JSONResponse({"message": "An error occurred"}, status_code=500)
 
 
 router.get("/logout")
@@ -102,6 +103,8 @@ async def confirmed_email(token: str, db: Session = Depends(get_db)):
     await repository_users.confirmed_email(email, db)
     # Redirect user to login page after confirming email
     return RedirectResponse(url="/login")
+
+
 @router.post('/request_email', response_class=HTMLResponse)
 async def request_email(body: RequestEmail, background_tasks: BackgroundTasks, request: Request,
                         db: Session = Depends(get_db)):
@@ -109,7 +112,7 @@ async def request_email(body: RequestEmail, background_tasks: BackgroundTasks, r
     user = await repository_users.get_user_by_email(body.email, db)
 
     if user and user.confirmed:
-        return templates.TemplateResponse("confirmation.html", {"request": request})
+        return {"message": "Your email is already confirmed"}
     if user:
         background_tasks.add_task(send_email, user.email, user.username, str(request.base_url))
     return {"message": "Check your email for confirmation."}

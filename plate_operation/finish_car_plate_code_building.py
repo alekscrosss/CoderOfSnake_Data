@@ -9,7 +9,7 @@ from open_photo_1 import open_photo #крок 1
 from discavery_plate_2 import discavery_plate #крок 2
 from plate_enlargement_3 import car_plate_enlargement #крок 3
 
-photo_name = 'car2.jpg'
+photo_name = '1car.jpg'
 
 def car_plate_build():
     #Приймаємо зображення, яке зберіглось у папку upload

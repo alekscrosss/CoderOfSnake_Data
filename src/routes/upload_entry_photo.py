@@ -9,8 +9,13 @@ from src.services.image_processing import add_date_to_image
 from src.db.database import get_db
 from src.crud.crud_vehicle import get_vehicle_by_license_plate, create_vehicle
 from src.crud.crud_parking_session import create_parking_session
+from fastapi.responses import RedirectResponse
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 
 router = APIRouter()
+templates = Jinja2Templates(directory='templates')
+
 
 
 def generate_random_date():
@@ -35,7 +40,7 @@ def is_ukrainian_license_plate(license_plate: str) -> bool:
     return re.match(pattern, license_plate) is not None
 
 
-@router.post("/upload-entry-photo/")
+@router.post("/upload-entry-photo")
 async def upload_entry_photo(
         entry_photo: UploadFile = File(...),
         license_plate: str = Form(...),
@@ -43,7 +48,7 @@ async def upload_entry_photo(
 ):
     try:
         if not is_ukrainian_license_plate(license_plate):
-            return JSONResponse(content={"error": "Номер не распознан"}, status_code=400)
+            return JSONResponse(content={"error": "Номер не визначено"}, status_code=400)
 
         filename = f"uploads/{entry_photo.filename}"
         save_file(entry_photo, filename)
@@ -60,6 +65,10 @@ async def upload_entry_photo(
         # Create a new parking session
         create_parking_session(db, vehicle_id=db_vehicle.id, entry_time=date)
 
-        return JSONResponse(content={"message": "Все ок", "date": date.isoformat(), "license_plate": license_plate})
+        return JSONResponse(content={"message": "Фото завантажено успішно", "date": date.isoformat(), "license_plate": license_plate})
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
+
+
+
+
