@@ -58,7 +58,7 @@ async def signup_page(request: Request):
 
 # Route for login form
 @app.get("/login")
-async def login_form(request: Request, ):
+async def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
