@@ -12,6 +12,7 @@ document.getElementById('upload-form').addEventListener('submit', async function
         });
         const data = await response.json();
 
+
         if (response.ok) {
             // Вивести повідомлення про успішне завантаження
             const messageElement = document.getElementById('message');

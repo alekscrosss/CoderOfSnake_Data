@@ -32,6 +32,7 @@ async def upload_exit_photo(
         license_plate: str = Form(...),
         db: Session = Depends(get_db)
 ):
+
     try:
         # Find the parking session by license plate
         db_parking_session = db.query(ParkingSession).join(Vehicle).filter(

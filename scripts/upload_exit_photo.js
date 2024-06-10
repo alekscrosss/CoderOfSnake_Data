@@ -19,6 +19,7 @@ document.getElementById('upload-exit-form').addEventListener('submit', async fun
         } else {
             messageElement.innerText = data.error || 'Error uploading exit photo';
             messageElement.style.color = 'red';
+
         }
 
         document.getElementById("exit_file").value = "";

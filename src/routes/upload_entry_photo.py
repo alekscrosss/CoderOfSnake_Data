@@ -45,6 +45,7 @@ async def upload_entry_photo(
         entry_photo: UploadFile = File(...),
         license_plate: str = Form(...),
         db: Session = Depends(get_db)
+
 ):
     try:
         if not is_ukrainian_license_plate(license_plate):
