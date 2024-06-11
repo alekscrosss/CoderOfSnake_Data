@@ -8,10 +8,12 @@ import os
 from open_photo_1 import open_photo #крок 1
 from discavery_plate_2 import discavery_plate #крок 2
 from plate_enlargement_3 import car_plate_enlargement #крок 3
+import pytesseract #Зчитування номеру машини
+from PIL import Image
 
-photo_name = '1car.jpg'
+#photo_name = 'car5.jpg'
 
-def car_plate_build():
+def car_plate_build(photo_name):
     #Приймаємо зображення, яке зберіглось у папку upload
     input_car_photo = open_photo(photo_path = f'uploads/{photo_name}')
 
@@ -21,13 +23,13 @@ def car_plate_build():
     discavery_photo_plate = car_plate_enlargement(discavery_photo_plate, 2) # збільшили її
 
     plt.imshow(discavery_photo_plate)
-    plt.show() # тимчасово, щоб побачити результат
+    #plt.show() # тимчасово, щоб побачити результат
 
     carplate_extract_img_gray = cv2.cvtColor(discavery_photo_plate, 
                                              cv2.COLOR_RGB2GRAY)
     plt.axis('off')  
     plt.imshow(carplate_extract_img_gray, cmap='gray')
-    plt.show() # тимчасово, щоб побачити результат
+    #plt.show() # тимчасово, щоб побачити результат
 
     # Збереження зображення у відтінках сірого з новим ім'ям
 
@@ -37,6 +39,15 @@ def car_plate_build():
     new_filename = f"{base}_gray{ext}"
     cv2.imwrite(new_filename, carplate_extract_img_gray)
 
-test = car_plate_build()
-test()
+    car_plate = pytesseract.image_to_string(
+        carplate_extract_img_gray,
+        config='--psm 6 --oem 3 -c tessedit_char_whitelist=ABCDEFGHIGKLMNOPQRSTUVXWZ0123456789')
+    
+    if car_plate != None:
+        return car_plate
+    else:
+        return "None"    
+
+
+
 
