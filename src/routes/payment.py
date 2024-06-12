@@ -22,7 +22,7 @@ async def make_payment(
 
         if not db_parking_session:
             return JSONResponse(
-                content={"error": "Не найдена сессия парковки для данного номерного знака или уже оплачена"},
+                content={"error": "Не знайдено сесію паркування для даного номерного знака або вже оплачено"},
                 status_code=404)
 
         # Log the expected and provided amounts
@@ -35,7 +35,7 @@ async def make_payment(
             db_parking_session.payment_status = 'paid'
             db.commit()
             db.refresh(db_parking_session)
-            return JSONResponse(content={"message": "У вас есть 15 минут для выезда, хорошего пути"})
+            return JSONResponse(content={"message": "У вас є 15 хвилин для виїзду, гарного шляху"})
         else:
             return JSONResponse(content={"error": "Неправильная сумма оплаты"}, status_code=400)
     except Exception as e:
