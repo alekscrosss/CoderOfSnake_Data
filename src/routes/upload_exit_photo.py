@@ -1,12 +1,15 @@
-from fastapi import APIRouter, File, UploadFile, Form, Depends
+from fastapi import APIRouter, File, UploadFile, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 import os
 from datetime import datetime
+import uuid
 from src.services.image_processing import add_date_to_image
 from src.db.database import get_db
 from src.crud.crud_parking_session import update_parking_session_exit_time
 from src.db.models import ParkingSession, Vehicle
+from plate_operation.finish_car_plate_code_building import car_plate_build  # Імпортуємо функцію розпізнавання номерного знака
+
 
 router = APIRouter()
 
@@ -29,11 +32,18 @@ def calculate_amount_due(entry_time: datetime, exit_time: datetime, rate_per_hou
 @router.post("/upload-exit-photo")
 async def upload_exit_photo(
         exit_photo: UploadFile = File(...),
-        license_plate: str = Form(...),
         db: Session = Depends(get_db)
 ):
-
     try:
+        # Generate a unique filename for the uploaded photo
+        unique_filename = f"uploads/{uuid.uuid4().hex}_{exit_photo.filename}"
+        save_file(exit_photo, unique_filename)
+
+        # Виклик функції розпізнавання номерного знака
+        license_plate = car_plate_build(unique_filename)
+        if not license_plate:
+            return JSONResponse(content={"error": "Номер не визначено"}, status_code=400)
+
         # Find the parking session by license plate
         db_parking_session = db.query(ParkingSession).join(Vehicle).filter(
             Vehicle.license_plate == license_plate,
@@ -41,15 +51,11 @@ async def upload_exit_photo(
         ).first()
 
         if not db_parking_session:
-            return JSONResponse(content={"error": "Немає сеансу паркування за номером"},
-                                status_code=404)
+            return JSONResponse(content={"error": "Немає сеансу паркування за номером"}, status_code=404)
 
         exit_time = datetime.now()
 
-        filename = f"uploads/{exit_photo.filename}"
-        save_file(exit_photo, filename)
-
-        add_date_to_image(filename, exit_time)
+        add_date_to_image(unique_filename, exit_time)
 
         # Calculate the amount due
         rate_per_hour = 25  # standard rate
