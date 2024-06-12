@@ -23,4 +23,5 @@ def open_photo(photo_path):
     plt.show() #Це потрібно для перевірки, коли все буде ОК - приберемо 
     
     #Вертаємо зображення у форматі RGB
-    return car_photo_rgb
+    # return car_photo_rgb
+    return cv2.imread(photo_path)
