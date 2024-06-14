@@ -3,7 +3,7 @@ document.getElementById('upload-exit-form').addEventListener('submit', async fun
 
     var formData = new FormData();
     formData.append("exit_photo", document.getElementById("exit_file").files[0]);
-    formData.append("license_plate", document.getElementById("exit_license_plate").value);
+
 
     try {
         const response = await fetch('/exit_photo/upload-exit-photo', {
@@ -23,7 +23,7 @@ document.getElementById('upload-exit-form').addEventListener('submit', async fun
         }
 
         document.getElementById("exit_file").value = "";
-        document.getElementById("exit_license_plate").value = "";
+
     } catch (error) {
         console.error('Error:', error);
         const messageElement = document.getElementById('message');
