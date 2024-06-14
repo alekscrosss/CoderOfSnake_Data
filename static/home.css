@@ -52,3 +52,12 @@
             font-weight: bold;
             text-align: center;
         }
+a {
+    color: #4CAF50; /* Change this to your desired link color */
+    font-size: 16px; /* Change this to your desired font size */
+    text-decoration: none; /* Removes underline from links */
+}
+a:hover {
+    color: #45a049; /* Change this to your desired hover color */
+    text-decoration: underline; /* Adds underline on hover */
+}
