@@ -14,7 +14,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, UploadFile, File, Form, Depends, HTTPException
 from src.services.auth import auth_service
 from src.db.models import User
-from src.routes import upload_entry_photo, upload_exit_photo, routes_auth, payment, admin_reports
+from src.routes import upload_entry_photo, upload_exit_photo, routes_auth, payment, admin_reports, admin, user, Vehicle_search, moth_time
+
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -105,8 +106,14 @@ def healthchecker(db: Session = Depends(get_db)):
 
 
 app.include_router(routes_auth.router, prefix='/api')
+app.include_router(admin.router, prefix="/admin", tags=["admin"])
+app.include_router(user.router, prefix="/user", tags=["user"])
 app.include_router(upload_entry_photo.router, prefix='/entry_photo')
 app.include_router(upload_exit_photo.router, prefix='/exit_photo')
 app.include_router(payment.router, prefix='/payment')
 app.include_router(admin_reports.router, prefix='/reports')
+app.include_router(Vehicle_search.router, prefix='/vehicle_search')
+app.include_router(moth_time.router, prefix='/moth_time')
+
+
 

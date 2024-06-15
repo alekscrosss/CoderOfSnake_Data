@@ -4,6 +4,7 @@ from sqlalchemy import Column, Integer, String, create_engine, ForeignKey, DateT
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -12,11 +13,9 @@ Base = declarative_base()
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-
 class Role(enum.Enum):
     user = 'user'
     admin = 'admin'
-
 
 class User(Base):
     __tablename__ = "users"
@@ -33,7 +32,7 @@ class User(Base):
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
     parking_sessions = relationship("ParkingSession", back_populates="user")
-
+    registered_vehicles = relationship("RegisteredUser", back_populates="user")
 
 class Vehicle(Base):
     __tablename__ = "vehicles"
@@ -43,13 +42,12 @@ class Vehicle(Base):
     parking_sessions = relationship("ParkingSession", back_populates="vehicle")
     registered_user = relationship("RegisteredUser", back_populates="vehicle", uselist=False)
 
-
 class ParkingSession(Base):
     __tablename__ = "parking_sessions"
 
     id = Column(Integer, primary_key=True)
     vehicle_id = Column(Integer, ForeignKey('vehicles.id'), nullable=False)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=True)  # Добавлено
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=True)
     entry_time = Column(DateTime, nullable=False, default=func.now())
     exit_time = Column(DateTime)
     payment_status = Column(String(20), nullable=False, default='not paid')
@@ -59,7 +57,6 @@ class ParkingSession(Base):
     vehicle = relationship("Vehicle", back_populates="parking_sessions")
     user = relationship("User", back_populates="parking_sessions")
 
-
 class Rate(Base):
     __tablename__ = "rates"
 
@@ -68,6 +65,16 @@ class Rate(Base):
     rate_per_min = Column(DECIMAL(10, 2), nullable=False)
     rate_per_day = Column(DECIMAL(10, 2), nullable=False)
     rate_per_mon = Column(DECIMAL(10, 2), nullable=False)
+
+class Blacklist(Base):
+    __tablename__ = "blacklist"
+
+    id = Column(Integer, primary_key=True)
+    plate_id = Column(Integer, ForeignKey('vehicles.id'), nullable=False)
+    reason = Column(String(255), nullable=True)  # Дополнительное поле для указания причины блокировки
+    added_at = Column(DateTime, default=func.now())
+
+    vehicle = relationship("Vehicle")
 
 
 class RegisteredUser(Base):
@@ -82,8 +89,7 @@ class RegisteredUser(Base):
     phone_number = Column(String(15), nullable=False)
     email = Column(String(100), nullable=False)
 
-    user = relationship("User")
+    user = relationship("User", back_populates="registered_vehicles")
     vehicle = relationship("Vehicle", back_populates="registered_user")
-
 
 Base.metadata.create_all(bind=engine)
