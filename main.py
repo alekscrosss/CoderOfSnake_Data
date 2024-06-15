@@ -15,7 +15,7 @@ from fastapi import FastAPI, UploadFile, File, Form, Depends, HTTPException
 from src.services.auth import auth_service
 from src.db.models import User
 from src.routes import upload_entry_photo, upload_exit_photo, routes_auth, payment, admin_reports
-
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -42,6 +42,7 @@ async def custom_middleware(request: Request, call_next):
     response = await call_next(request)
     during = time.time() - start_time
     response.headers['performance'] = str(during)
+
     return response
 
 

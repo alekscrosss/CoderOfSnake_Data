@@ -7,10 +7,20 @@
     <link rel="stylesheet" href="/static/home.css">
 </head>
 <body>
-    <h2>Upload Photos</h2>
-    <button onclick="window.location.href='/upload-entry-photo'">Upload Entry Photo</button>
-    <button onclick="window.location.href='/upload-exit-photo'">Upload Exit Photo</button>
-    <button onclick="window.location.href='/payment'">Make payment</button>
-<a href="/logout">Вийти</a>
+    <h2 class="upload-button">Upload Photos</h2>
+    <button-upload-entry-photos onclick="window.location.href='/upload-entry-photo'">Upload Entry Photo</button-upload-entry-photos>
+    <button-upload-exit-photos onclick="window.location.href='/upload-exit-photo'">Upload Exit Photo</button-upload-exit-photos>
+    <button-payment onclick="window.location.href='/payment'">Make payment</button-payment>
+<a href="/logout" class="logout-button">Вийти</a>
+
+<!--<h2>Звіти адміністратора</h2>-->
+
+    <div class="container">
+        <h1>Звіти адміністратора</h1>
+        <button id="allDataBtn">Створити звіт для всіх даних</button>
+        <button id="usersDataBtn">Створити звіт для користувачів</button>
+        <div id="output" class="output"></div>
+    </div>
+<script src="scripts/home.js"></script>
 </body>
 </html>
