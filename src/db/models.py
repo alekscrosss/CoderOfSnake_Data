@@ -32,6 +32,8 @@ class User(Base):
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
+    parking_sessions = relationship("ParkingSession", back_populates="user")
+
 
 class Vehicle(Base):
     __tablename__ = "vehicles"
@@ -41,11 +43,13 @@ class Vehicle(Base):
     parking_sessions = relationship("ParkingSession", back_populates="vehicle")
     registered_user = relationship("RegisteredUser", back_populates="vehicle", uselist=False)
 
+
 class ParkingSession(Base):
     __tablename__ = "parking_sessions"
 
     id = Column(Integer, primary_key=True)
     vehicle_id = Column(Integer, ForeignKey('vehicles.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=True)  # Добавлено
     entry_time = Column(DateTime, nullable=False, default=func.now())
     exit_time = Column(DateTime)
     payment_status = Column(String(20), nullable=False, default='not paid')
@@ -53,6 +57,7 @@ class ParkingSession(Base):
     is_registered = Column(Boolean, default=False)
 
     vehicle = relationship("Vehicle", back_populates="parking_sessions")
+    user = relationship("User", back_populates="parking_sessions")
 
 
 class Rate(Base):
