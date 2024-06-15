@@ -86,4 +86,43 @@ class RegisteredUser(Base):
     vehicle = relationship("Vehicle", back_populates="registered_user")
 
 
+class LicensePlateRegion(Base): #15/06/2024 Olha
+    __tablename__ = "license_plate_region"
+
+    id = Column(Integer, primary_key=True)
+    plate_prefix = Column(String(2), nullable=False, unique=True)
+    region_name = Column(String(255), nullable=False)
+
+#Код для вставки данных в таблицу license_plate_region
+"""
+INSERT INTO license_plate_region (plate_prefix, region_name) VALUES
+('AA', 'Kyiv'),
+('AB', 'Vinnytsia'),
+('AC', 'Volyn'),
+('AE', 'Dnipropetrovsk'),
+('AH', 'Donetsk'),
+('AI', 'Zhytomyr'),
+('AK', 'Zakarpattia'),
+('AM', 'Zaporizhzhia'),
+('AO', 'Ivano-Frankivsk'),
+('AP', 'Kyiv Oblast'),
+('AT', 'Kirovohrad'),
+('AX', 'Luhansk'),
+('BA', 'Lviv'),
+('BB', 'Mykolaiv'),
+('BC', 'Odessa'),
+('BE', 'Poltava'),
+('BH', 'Rivne'),
+('BI', 'Sumy'),
+('BK', 'Ternopil'),
+('BM', 'Kharkiv'),
+('BO', 'Kherson'),
+('BT', 'Khmelnytskyi'),
+('BX', 'Cherkasy'),
+('CA', 'Chernihiv'),
+('CB', 'Chernivtsi');"""
+
 Base.metadata.create_all(bind=engine)
+
+
+
