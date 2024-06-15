@@ -53,7 +53,7 @@ async def upload_entry_photo(
         save_file(entry_photo, unique_filename)
 
         # Виклик функції розпізнавання номерного знака
-        license_plate = car_plate_build(unique_filename)
+        license_plate = car_plate_build(unique_filename).strip()
         if not license_plate:
             return JSONResponse(content={"error": "Номер не визначено"}, status_code=400)
 

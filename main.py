@@ -80,6 +80,9 @@ async def home(request: Request):
 async def home(request: Request):
     return templates.TemplateResponse('upload-exit-photo.html', {"request": request, "title": "upload_exit"})
 
+@app.get('/payment')
+async def home(request: Request):
+    return templates.TemplateResponse('payment.html', {"request": request, "title": "payment"})
 
 
 @app.get("/api/healthchecker")
