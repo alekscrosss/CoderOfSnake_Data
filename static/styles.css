@@ -64,6 +64,9 @@ button:hover {
 .error-message {
     position: relative;
     bottom: -180px;
-    right: 14%
+    left: -50%
+    color: red;
 
 }
+
+

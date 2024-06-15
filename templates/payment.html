@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <link rel="stylesheet" href="/static/home.css">
+</head>
+<body>
+    <h2>Здійснити платіж</h2>
+    <form id="payment-form" method="post">
+        <label for="license_plate">Номерний знак:</label>
+        <input type="text" id="license_plate" name="license_plate" required>
+
+        <label for="payment_amount">Сума платежу (грн):</label>
+        <input type="number" id="payment_amount" name="payment_amount" step="0.01" required>
+
+        <button type="submit">Оплатити</button>
+    </form>
+    <div id="message"></div>
+    <a href="/home">Назад до кабінету</a>
+    <a href="/logout">Вийти</a>
+    <script src="scripts/payment.js"></script>
+</body>
+</html>

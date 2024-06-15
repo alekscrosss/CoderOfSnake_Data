@@ -8,14 +8,15 @@
             height: 100vh;
             margin: 0;
         }
-        .container {
+      .container {
             background: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            text-align: center;
-        }
+            width: 1200px;
+            margin: 0 auto; /* Це додає вирівнювання по центру */
+            text-align: center; /* Це центрує текст всередині контейнера */
+}
         h2 {
             color: #333;
             margin-bottom: 20px;
@@ -43,6 +44,42 @@
             cursor: pointer;
             margin-top: 10px;
         }
+        button-upload-entry-photos {
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px; /* Change this to your desired font size */
+            text-decoration: none; /* Removes underline from links */
+            position: absolute;
+            top: 220px; /* Adjust top position */
+            left: 50px;
+            background-color: #45a049;
+            cursor: pointer;
+        }
+
+        button-upload-exit-photos {
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px; /* Change this to your desired font size */
+            text-decoration: none; /* Removes underline from links */
+            position: absolute;
+            top: 220px; /* Adjust top position */
+            left: 250px;
+            background-color: #45a049;
+            cursor: pointer;
+        }
+
+        button-payment {
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px; /* Change this to your desired font size */
+            text-decoration: none; /* Removes underline from links */
+            position: absolute;
+            top: 220px; /* Adjust top position */
+            left: 450px;
+            background-color: #45a049;
+            cursor: pointer;
+        }
+
         button:hover {
             background-color: #45a049;
         }
@@ -52,12 +89,59 @@
             font-weight: bold;
             text-align: center;
         }
-a {
+        .upload-button {
+            padding: 10px 20px;
+            font-size: 25px;
+            text-decoration: none;
+            position: absolute;
+            top: 140px; /* Adjust top position */
+            left: 40px;
+            color: #333;
+            margin-bottom: 20px;
+
+        }
+
+
+        #output {
+            background-color: #f0f0f0; /* колір фону */
+            padding: 20px; /* відступи всередині блоку */
+            border: 1px solid #ccc; /* рамка */
+            border-radius: 8px; /* закруглені кути */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* тінь */
+            text-align: center; /* центрування тексту */
+            margin-top: 20px; /* відступ зверху */
+        }
+        table {
+            width: 100%; /* Ширина таблиці на 100% від її контейнера */
+            margin: 20px auto; /* Вирівнює таблицю по центру відносно батьківського контейнера */
+            border-collapse: collapse; /* Зливає рамки між ячейками */
+        }
+
+        th, td {
+            padding: 10px; /* Відступи всередині кожної ячейки */
+            border: 1px solid #ccc; /* Рамки для кожної ячейки */
+            text-align: center; /* Центрує вміст у всіх ячейках */
+        }
+
+        th {
+            background-color: #f0f0f0; /* Колір фону для заголовків */
+            font-weight: bold; /* Жирний шрифт для заголовків */
+}
+
+
+
+
+a.logout-button {
     color: #4CAF50; /* Change this to your desired link color */
     font-size: 16px; /* Change this to your desired font size */
     text-decoration: none; /* Removes underline from links */
-}
-a:hover {
-    color: #45a049; /* Change this to your desired hover color */
-    text-decoration: underline; /* Adds underline on hover */
-}
+    position: absolute;
+    top: 20px; /* Adjust top position */
+    right: 20px; /* Adjust right position */
+    }
+
+    a:hover {
+        color: #45a049; /* Change this to your desired hover color */
+        text-decoration: underline; /* Adds underline on hover */
+    }
+
