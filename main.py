@@ -14,7 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, UploadFile, File, Form, Depends, HTTPException
 from src.services.auth import auth_service
 from src.db.models import User
-from src.routes import upload_entry_photo, upload_exit_photo, routes_auth, payment, admin_reports, admin, user, Vehicle_search, moth_time
+from src.routes import upload_entry_photo, upload_exit_photo, routes_auth, payment, admin_reports, admin, user, Vehicle_search, moth_time, user_reports
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -112,6 +112,7 @@ app.include_router(upload_entry_photo.router, prefix='/entry_photo')
 app.include_router(upload_exit_photo.router, prefix='/exit_photo')
 app.include_router(payment.router, prefix='/payment')
 app.include_router(admin_reports.router, prefix='/reports')
+app.include_router(user_reports.router, prefix='/reports') #16/06/2024 Olha
 app.include_router(Vehicle_search.router, prefix='/vehicle_search')
 app.include_router(moth_time.router, prefix='/moth_time')
 
