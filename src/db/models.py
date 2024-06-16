@@ -13,9 +13,11 @@ Base = declarative_base()
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 class Role(enum.Enum):
     user = 'user'
     admin = 'admin'
+
 
 class User(Base):
     __tablename__ = "users"
@@ -92,4 +94,44 @@ class RegisteredUser(Base):
     user = relationship("User", back_populates="registered_vehicles")
     vehicle = relationship("Vehicle", back_populates="registered_user")
 
+
+class LicensePlateRegion(Base): #15/06/2024 Olha
+    __tablename__ = "license_plate_region"
+
+    id = Column(Integer, primary_key=True)
+    plate_prefix = Column(String(2), nullable=False, unique=True)
+    region_name = Column(String(255), nullable=False)
+
+#Код для вставки данных в таблицу license_plate_region
+"""
+INSERT INTO license_plate_region (plate_prefix, region_name) VALUES
+('AA', 'Kyiv'),
+('AB', 'Vinnytsia'),
+('AC', 'Volyn'),
+('AE', 'Dnipropetrovsk'),
+('AH', 'Donetsk'),
+('AI', 'Zhytomyr'),
+('AK', 'Zakarpattia'),
+('AM', 'Zaporizhzhia'),
+('AO', 'Ivano-Frankivsk'),
+('AP', 'Kyiv Oblast'),
+('AT', 'Kirovohrad'),
+('AX', 'Luhansk'),
+('BA', 'Lviv'),
+('BB', 'Mykolaiv'),
+('BC', 'Odessa'),
+('BE', 'Poltava'),
+('BH', 'Rivne'),
+('BI', 'Sumy'),
+('BK', 'Ternopil'),
+('BM', 'Kharkiv'),
+('BO', 'Kherson'),
+('BT', 'Khmelnytskyi'),
+('BX', 'Cherkasy'),
+('CA', 'Chernihiv'),
+('CB', 'Chernivtsi');"""
+
 Base.metadata.create_all(bind=engine)
+
+
+
