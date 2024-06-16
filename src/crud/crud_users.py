@@ -4,12 +4,12 @@ from sqlalchemy.orm import Session
 from src.db.models import User, Role  # Убедитесь, что Role импортирована
 from src.schemas.schemas_user import UserModel
 
-async def create_user(body: UserModel, db: Session) -> User:
-    admin_exists = db.query(User).filter(User.role == Role.ADMIN).first()
+async def create_user(body: UserModel, db: Session):
+    admin_exists = db.query(User).filter(User.role == Role.admin).first()
     if admin_exists:
-        new_user = User(**body.dict(), role=Role.USER)
+        new_user = User(**body.dict(), role=Role.user)
     else:
-        new_user = User(**body.dict(), role=Role.ADMIN)
+        new_user = User(**body.dict(), role=Role.admin)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)

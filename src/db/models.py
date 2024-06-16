@@ -49,7 +49,7 @@ class ParkingSession(Base):
 
     id = Column(Integer, primary_key=True)
     vehicle_id = Column(Integer, ForeignKey('vehicles.id'), nullable=False)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     entry_time = Column(DateTime, nullable=False, default=func.now())
     exit_time = Column(DateTime)
     payment_status = Column(String(20), nullable=False, default='not paid')
