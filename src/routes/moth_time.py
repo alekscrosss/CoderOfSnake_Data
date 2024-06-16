@@ -39,10 +39,17 @@ async def check_parking_time(user_id: int):
             if exit_time and entry_time:
                 total_parking_time += (exit_time - entry_time)
 
-        if total_parking_time > timedelta(hours=700):
-            return {"result": False}
-        else:
-            return {"result": True}
+        total_seconds = int(total_parking_time.total_seconds())
+        hours, remainder = divmod(total_seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+
+        return {
+            "total_parking_time": {
+                "hours": hours,
+                "minutes": minutes,
+                "seconds": seconds
+            }
+        }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
