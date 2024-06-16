@@ -3,22 +3,23 @@ from typing import Optional
 from datetime import datetime
 from src.db.models import Role
 
-class PlateBase(BaseModel):
-    number: str
+class VehicleBase(BaseModel):
+    license_plate: str
 
-class PlateCreate(PlateBase):
+class VehicleCreate(VehicleBase):
     pass
 
-class Plate(PlateBase):
+class Vehicle(VehicleBase):
     id: int
-    user_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class ParkingRateBase(BaseModel):
-    amount: float
-    duration: int
+    rate_per_hour: float
+    rate_per_min: float
+    rate_per_day: float
+    rate_per_mon: float
 
 class ParkingRateCreate(ParkingRateBase):
     pass

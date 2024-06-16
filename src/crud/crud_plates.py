@@ -1,17 +1,19 @@
+# src/crud/crud_plates.py
+
 from sqlalchemy.orm import Session
-from src.db.models import Vehicle
-from src.schemas.schemas_user import PlateCreate
+from src.db import models
+from src.schemas import schemas_user
 
-def add_plate(db: Session, plate: PlateCreate):
-    db_plate = Vehicle(license_plate=plate.number)
-    db.add(db_plate)
+def add_vehicle(db: Session, vehicle: schemas_user.VehicleCreate):
+    db_vehicle = models.Vehicle(license_plate=vehicle.license_plate)
+    db.add(db_vehicle)
     db.commit()
-    db.refresh(db_plate)
-    return db_plate
+    db.refresh(db_vehicle)
+    return db_vehicle
 
-def delete_plate(db: Session, plate_id: int):
-    db_plate = db.query(Vehicle).filter(Vehicle.id == plate_id).first()
-    if db_plate:
-        db.delete(db_plate)
+def delete_vehicle(db: Session, vehicle_id: int):
+    db_vehicle = db.query(models.Vehicle).filter(models.Vehicle.id == vehicle_id).first()
+    if db_vehicle:
+        db.delete(db_vehicle)
         db.commit()
-    return db_plate
+    return db_vehicle
