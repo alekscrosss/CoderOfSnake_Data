@@ -1,13 +1,27 @@
 document.getElementById('upload-exit-form').addEventListener('submit', async function(event) {
     event.preventDefault();
 
-    var formData = new FormData();
+    const formData = new FormData();
     formData.append("exit_photo", document.getElementById("exit_file").files[0]);
-
-
+    const messageElement = document.getElementById('message');
     try {
+            // Отримуємо токен доступу з localStorage
+            const token = localStorage.getItem('access_token');
+
+            if (!token) {
+                messageElement.innerText = 'User is not authenticated';
+                messageElement.style.color = 'red';
+                messageElement.style.display = 'block';
+                return;
+            }
+
+
         const response = await fetch('/exit_photo/upload-exit-photo', {
             method: 'POST',
+            headers: {
+
+              'Authorization': `Bearer ${token}`,
+            },
             body: formData
         });
         const data = await response.json();

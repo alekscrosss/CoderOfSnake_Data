@@ -1,5 +1,3 @@
-# src/crud/crud_vehicle.py
-
 from sqlalchemy.orm import Session
 from src.db import models
 from src.schemas import schemas_user
@@ -17,7 +15,8 @@ def add_vehicle(db: Session, vehicle: schemas_user.VehicleCreate):
     db.refresh(db_vehicle)
     return db_vehicle
 
-def create_vehicle(db: Session, vehicle: schemas_user.VehicleCreate):
+def create_vehicle(db: Session, license_plate: str):
+    vehicle = schemas_user.VehicleCreate(license_plate=license_plate)
     return add_vehicle(db, vehicle)
 
 def delete_vehicle(db: Session, vehicle_id: int):

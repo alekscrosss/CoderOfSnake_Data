@@ -17,10 +17,12 @@ from fastapi.templating import Jinja2Templates
 from fastapi import Request
 from plate_operation.finish_car_plate_code_building import car_plate_build  # Імпортуємо функцію розпізнавання номерного знака
 from src.services.auth import get_current_user
+import uuid
+import logging
 
 router = APIRouter()
 templates = Jinja2Templates(directory='templates')
-
+logging.basicConfig(level=logging.DEBUG)
 
 def generate_random_date():
     return datetime.now() - timedelta(
@@ -57,6 +59,7 @@ async def upload_entry_photo(
 
         # Call license plate recognition function
         license_plate = car_plate_build(unique_filename).strip()
+        logging.debug(f"License plate recognized: {license_plate}")
         if not license_plate:
             return JSONResponse(content={"error": "Номер не визначено"}, status_code=400)
 
@@ -65,13 +68,27 @@ async def upload_entry_photo(
 
         # Check if the vehicle already exists in the database
         db_vehicle = get_vehicle_by_license_plate(db, license_plate)
-        if not db_vehicle:
-            # If not, create a new record
+        logging.debug(f"Database vehicle: {db_vehicle}")
+
+        if db_vehicle is None:
+            # Vehicle not found in database, create a new one
+            logging.debug("Vehicle not found in database, creating new...")
             db_vehicle = create_vehicle(db, license_plate)
+            logging.debug(f"New vehicle created with license plate: {license_plate}")
 
         # Create a new parking session
         create_parking_session(db, vehicle_id=db_vehicle.id, user_id=current_user.id, entry_time=date)
+        logging.debug("Parking session created")
 
-        return JSONResponse(content={"message": "Фото завантажено успішно", "date": date.isoformat(), "license_plate": license_plate})
+        # Prepare response data
+        response_data = {
+            "date": date.isoformat(),
+            "license_plate": license_plate
+        }
+        logging.debug(f"Response data: {response_data}")
+
+        return JSONResponse(content=response_data)
+
     except Exception as e:
+        logging.error(f"Error: {str(e)}")
         return JSONResponse(content={"error": str(e)}, status_code=500)
