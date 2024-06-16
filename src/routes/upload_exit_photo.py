@@ -2,6 +2,7 @@ from fastapi import APIRouter, File, UploadFile, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 import os
+from src.db.models import User
 from datetime import datetime
 import uuid
 from src.services.image_processing import add_date_to_image
@@ -9,7 +10,7 @@ from src.db.database import get_db
 from src.crud.crud_parking_session import update_parking_session_exit_time
 from src.db.models import ParkingSession, Vehicle
 from plate_operation.finish_car_plate_code_building import car_plate_build  # Імпортуємо функцію розпізнавання номерного знака
-
+from src.services.auth import get_current_user
 
 router = APIRouter()
 
@@ -32,14 +33,15 @@ def calculate_amount_due(entry_time: datetime, exit_time: datetime, rate_per_hou
 @router.post("/upload-exit-photo")
 async def upload_exit_photo(
         exit_photo: UploadFile = File(...),
-        db: Session = Depends(get_db)
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
 ):
     try:
         # Generate a unique filename for the uploaded photo
         unique_filename = f"uploads/{uuid.uuid4().hex}_{exit_photo.filename}"
         save_file(exit_photo, unique_filename)
 
-        # Виклик функції розпізнавання номерного знака
+        # Call license plate recognition function
         license_plate = car_plate_build(unique_filename).strip()
         if not license_plate:
             return JSONResponse(content={"error": "Номер не визначено"}, status_code=400)
@@ -62,7 +64,9 @@ async def upload_exit_photo(
         amount_due = calculate_amount_due(db_parking_session.entry_time, exit_time, rate_per_hour)
 
         # Update the parking session with the exit time and amount due
-        update_parking_session_exit_time(db, db_parking_session.id, exit_time, amount_due)
+        db_parking_session.exit_time = exit_time
+        db_parking_session.amount_due = amount_due
+        db.commit()
 
         return JSONResponse(content={"message": "Фото завантажено успішно", "exit_time": exit_time.isoformat(), "amount_due": amount_due})
     except Exception as e:

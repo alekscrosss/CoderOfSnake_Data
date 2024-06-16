@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 import os
 import re
 import uuid  # Import uuid for unique filename generation
+
+from src.db.models import User
 from src.services.image_processing import add_date_to_image
 from src.db.database import get_db
 from src.crud.crud_vehicle import get_vehicle_by_license_plate, create_vehicle
@@ -14,7 +16,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
 from plate_operation.finish_car_plate_code_building import car_plate_build  # Імпортуємо функцію розпізнавання номерного знака
-
+from src.services.auth import get_current_user
 
 router = APIRouter()
 templates = Jinja2Templates(directory='templates')
@@ -45,14 +47,15 @@ def is_ukrainian_license_plate(license_plate: str) -> bool:
 @router.post("/upload-entry-photo")
 async def upload_entry_photo(
         entry_photo: UploadFile = File(...),
-        db: Session = Depends(get_db)
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
 ):
     try:
         # Generate a unique filename for the uploaded photo
         unique_filename = f"uploads/{uuid.uuid4().hex}_{entry_photo.filename}"
         save_file(entry_photo, unique_filename)
 
-        # Виклик функції розпізнавання номерного знака
+        # Call license plate recognition function
         license_plate = car_plate_build(unique_filename).strip()
         if not license_plate:
             return JSONResponse(content={"error": "Номер не визначено"}, status_code=400)
@@ -67,7 +70,7 @@ async def upload_entry_photo(
             db_vehicle = create_vehicle(db, license_plate)
 
         # Create a new parking session
-        create_parking_session(db, vehicle_id=db_vehicle.id, entry_time=date)
+        create_parking_session(db, vehicle_id=db_vehicle.id, user_id=current_user.id, entry_time=date)
 
         return JSONResponse(content={"message": "Фото завантажено успішно", "date": date.isoformat(), "license_plate": license_plate})
     except Exception as e:

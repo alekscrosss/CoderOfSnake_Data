@@ -51,7 +51,7 @@ class Auth:
         encoded_refresh_token = jwt.encode(to_encode, self.SECRET_KEY, algorithm=self.ALGORITHM)
         return encoded_refresh_token
 
-    async def get_current_user(self, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> UserResponse:
+    async def get_current_user(self, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
         credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
@@ -59,6 +59,7 @@ class Auth:
         )
 
         try:
+            # Decode JWT
             payload = jwt.decode(token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
             if payload.get("scope") == "access_token":
                 email = payload.get("sub")
@@ -66,28 +67,13 @@ class Auth:
                     raise credentials_exception
             else:
                 raise credentials_exception
-        except JWTError:
+        except JWTError as e:
             raise credentials_exception
 
-        user = self.r.get(f"user:{email}")
-        if user is None:
-            user = await repository_users.get_user_by_email(email, db)
-            if user is None:
-                raise credentials_exception
-            self.r.set(f"user:{email}", pickle.dumps(user))
-            self.r.expire(f"user:{email}", 900)
-        else:
-            user = pickle.loads(user)
-
+        user = await repository_users.get_user_by_email(email, db)
         if user is None:
             raise credentials_exception
-
-        return UserResponse.from_orm(user)
-
-    async def get_current_admin(self, current_user: UserResponse = Depends(get_current_user)) -> UserResponse:
-        if current_user.role != Role.ADMIN:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions")
-        return current_user
+        return user
 
     async def decode_refresh_token(self, refresh_token: str):
         try:
@@ -122,4 +108,4 @@ auth_service = Auth()
 
 # Экспорт функций для использования в других модулях
 get_current_user = auth_service.get_current_user
-get_current_admin = auth_service.get_current_admin
+
