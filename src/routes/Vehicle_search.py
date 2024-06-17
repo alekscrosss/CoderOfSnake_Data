@@ -7,7 +7,6 @@ router = APIRouter(prefix="/vehicle_search", tags=['vehicle_search'])
 @router.post("/find-parking-sessions/")
 async def find_parking_sessions(license_plate: str):
     try:
-
         connection = psycopg2.connect(
             host='localhost',
             database='db3',
@@ -24,8 +23,10 @@ async def find_parking_sessions(license_plate: str):
 
         vehicle_id = vehicle_id[0]
 
-        cursor.execute("SELECT * FROM parking_sessions WHERE vehicle_id = %s", (vehicle_id,))
+        cursor.execute("SELECT * FROM parking_sessions WHERE id = %s", (vehicle_id,))
         parking_sessions = cursor.fetchall()
+
+        column_names = [desc[0] for desc in cursor.description]
 
         cursor.close()
         connection.close()
@@ -33,7 +34,11 @@ async def find_parking_sessions(license_plate: str):
         if not parking_sessions:
             return {"message": "No parking sessions found for the given vehicle ID"}
 
-        return {"parking_sessions": parking_sessions}
+        parking_sessions_with_columns = [
+            dict(zip(column_names, session)) for session in parking_sessions
+        ]
+
+        return {"parking_sessions": parking_sessions_with_columns}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
