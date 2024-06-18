@@ -44,8 +44,8 @@ class Blacklist(BlacklistBase):
 
 class ParkingHistory(BaseModel):
     id: int
-    vehicle_id: int
-    user_id: int
+    vehicle_license_plate: str
+    user_name: str
     entry_time: datetime
     exit_time: Optional[datetime]
     payment_status: str

@@ -9,16 +9,22 @@
 <body>
     <button-upload-entry-photos onclick="window.location.href='/upload-entry-photo'">Upload Entry Photo</button-upload-entry-photos>
     <button-upload-exit-photos onclick="window.location.href='/upload-exit-photo'">Upload Exit Photo</button-upload-exit-photos>
-    <button-payment onclick="window.location.href='/payment'">Make payment</button-payment>
-    <button-search onclick="window.location.href='/search'">Пошук</button-search>
-    <a href="/logout" class="logout-button">Вийти</a>
+    <button-payment onclick="window.location.href='/payment'">Make Payment</button-payment>
+    <button-search onclick="window.location.href='/search'">Search</button-search>
+    <a href="/logout" class="logout-button">Logout</a>
 
     <div class="container" id="adminReports" style="display: none;">
-        <h1>Звіти адміністратора</h1>
-        <button id="allDataBtn">Створити звіт для всіх даних</button>
-        <button id="usersDataBtn">Створити звіт для користувачів</button>
+        <h1>Admin Reports</h1>
+        <button id="allDataBtn">Generate Report for All Data</button>
+        <button id="usersDataBtn">Generate Report for Users</button>
         <div id="output" class="output"></div>
     </div>
+
+    <div class="container">
+        <h1>Parking History</h1>
+        <div id="parkingHistoryOutput"></div>
+    </div>
+
     <script src="/scripts/home.js"></script>
 </body>
 </html>
