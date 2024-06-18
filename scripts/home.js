@@ -1,5 +1,22 @@
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('/api/auth/me', {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.role === 'admin') {
+            document.getElementById('adminReports').style.display = 'block';
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching user data:', error);
+    });
+});
+
 document.getElementById('allDataBtn').addEventListener('click', () => {
-    fetch('/reports/reports/make-admin-reports-all_data/', {
+    fetch('/reports/make-admin-reports-all_data/', {
         method: 'POST'
     })
     .then(response => response.blob())
@@ -13,7 +30,7 @@ document.getElementById('allDataBtn').addEventListener('click', () => {
 });
 
 document.getElementById('usersDataBtn').addEventListener('click', () => {
-    fetch('/reports/reports/make-admin-reports-users/', {
+    fetch('/reports/make-admin-reports-users/', {
         method: 'POST'
     })
     .then(response => response.blob())

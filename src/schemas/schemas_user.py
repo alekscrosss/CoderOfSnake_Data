@@ -71,29 +71,35 @@ class User(UserBase):
     class Config:
         from_attributes = True
 
+from pydantic import BaseModel
+from pydantic import EmailStr
+from typing import Optional
+from src.db.models import Role
+
 class UserModel(BaseModel):
-    username: str = Field(min_length=2, max_length=150)
-    email: EmailStr
-    password: str = Field(min_length=6, max_length=150)
-
-
-class UserResponse(BaseModel):
-    id: int
     username: str
-    email: str
-    role: Role
+    email: EmailStr
+    password: str
 
     class Config:
         from_attributes = True
 
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    email: EmailStr
+    role: Role
+
+    class Config:
+        from_attributes = True
 
 class TokenModel(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
 
-
 class RequestEmail(BaseModel):
     email: EmailStr
+
 
 

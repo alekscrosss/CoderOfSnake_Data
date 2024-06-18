@@ -1,20 +1,18 @@
-# file main.py
-import os
-import time
-from datetime import datetime
-
-import redis
-from fastapi import Request, UploadFile
+from fastapi import FastAPI, Request, UploadFile, File, Form, Depends, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from starlette.responses import HTMLResponse, JSONResponse
 from src.db.database import get_db
-from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
-from fastapi import FastAPI, UploadFile, File, Form, Depends, HTTPException
 from src.services.auth import auth_service
 from src.db.models import User
 from src.routes import upload_entry_photo, upload_exit_photo, routes_auth, payment, admin_reports, admin, user, Vehicle_search, moth_time, user_reports
+
+import os
+import time
+from datetime import datetime
+import redis
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -26,31 +24,17 @@ templates = Jinja2Templates(directory='templates')
 app.mount("/scripts", StaticFiles(directory="scripts"), name="scripts")
 
 
-# # Fetch the Redis host from environment variable
-# REDIS_HOST = os.environ.get("REDIS_HOST")
-#
-# # Fetch the Redis port from environment variable, defaulting to 6380 if not set
-# REDIS_PORT = int(os.environ.get("REDIS_PORT", 11929))
-# REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD")
-#
-# # Create the Redis client
-# redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
-
 @app.middleware('http')
 async def custom_middleware(request: Request, call_next):
-
     start_time = time.time()
     response = await call_next(request)
     during = time.time() - start_time
     response.headers['performance'] = str(during)
-
     return response
-
 
 # Додавання обробника для кореневого URL
 @app.get("/", response_class=HTMLResponse, description="Main page")
 async def root(request: Request):
-
     return templates.TemplateResponse('index.html', {"request": request, "title": "Car numbers aрр"})
 
 # Route for registration form
@@ -69,33 +53,29 @@ async def home(request: Request):
     return templates.TemplateResponse('home.html', {"request": request, "title": "Personal cabinet"})
 
 # Маршрут для завантаження фотографії
-
-
 @app.get("/logout")
-async def home(request: Request):
+async def logout(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "title": "Car numbers aрр"})
 
 @app.get('/upload-entry-photo')
-async def home(request: Request):
+async def upload_entry_photo_page(request: Request):
     return templates.TemplateResponse('upload-entry-photo.html', {"request": request, "title": "upload_entry"})
+
 @app.get('/upload-exit-photo')
-async def home(request: Request):
+async def upload_exit_photo_page(request: Request):
     return templates.TemplateResponse('upload-exit-photo.html', {"request": request, "title": "upload_exit"})
 
 @app.get('/payment')
-async def home(request: Request):
+async def payment_page(request: Request):
     return templates.TemplateResponse('payment.html', {"request": request, "title": "payment"})
 
 @app.get('/search')
-async def home(request: Request):
+async def search_page(request: Request):
     return templates.TemplateResponse('search.html', {"request": request, "title": "search"})
-
 
 @app.get("/api/healthchecker")
 def healthchecker(db: Session = Depends(get_db)):
-
     try:
-    #Make request
         result = db.execute(text("SELECT 1")).fetchone()
         if result is None:
             raise HTTPException(status_code=500, detail="Database is not configured correctly")
@@ -103,11 +83,6 @@ def healthchecker(db: Session = Depends(get_db)):
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail="Error connecting to the database")
-
-
-
-
-
 
 app.include_router(routes_auth.router, prefix='/api')
 app.include_router(admin.router, prefix="/admin", tags=["admin"])
@@ -119,6 +94,3 @@ app.include_router(admin_reports.router, prefix='/reports')
 app.include_router(user_reports.router, prefix='/reports') #16/06/2024 Olha
 app.include_router(Vehicle_search.router, prefix='/vehicle_search')
 app.include_router(moth_time.router, prefix='/moth_time')
-
-
-

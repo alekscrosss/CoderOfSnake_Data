@@ -109,3 +109,5 @@ auth_service = Auth()
 # Экспорт функций для использования в других модулях
 get_current_user = auth_service.get_current_user
 
+
+
