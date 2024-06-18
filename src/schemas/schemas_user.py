@@ -42,20 +42,18 @@ class Blacklist(BlacklistBase):
     class Config:
         from_attributes = True
 
-class ParkingHistoryBase(BaseModel):
-    start_time: datetime
-    end_time: datetime
-    amount_paid: float
-
-class ParkingHistoryCreate(ParkingHistoryBase):
-    pass
-
-class ParkingHistory(ParkingHistoryBase):
+class ParkingHistory(BaseModel):
     id: int
+    vehicle_id: int
     user_id: int
+    entry_time: datetime
+    exit_time: Optional[datetime]
+    payment_status: str
+    amount_due: Optional[float]
+    is_registered: bool
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class UserBase(BaseModel):
     username: str

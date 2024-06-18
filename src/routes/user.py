@@ -1,5 +1,3 @@
-# src/routes/user.py
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from src.schemas import schemas_user
