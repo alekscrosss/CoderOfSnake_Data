@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.role === 'admin') {
             document.getElementById('adminReports').style.display = 'block';
             document.getElementById('blacklistAdmin').style.display = 'block';
+            document.getElementById('searchButtonContainer').style.display = 'block';
         }
         loadParkingHistory(token);
     })

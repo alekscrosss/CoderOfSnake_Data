@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find Parking Sessions</title>
-       <link rel="stylesheet" href="/static/home.css">
-   </head>
+    <title>Search Vehicle</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
 <body>
-      <h2>Find Parking Sessions</h2>
-    <form id="findParkingForm">
-        <label for="licensePlate">Enter License Plate:</label>
-        <input type="text" id="licensePlate" name="licensePlate" required>
-        <button type="submit">Find Parking Sessions</button>
-    </form>
-
-    <div id="output"></div>
-    <div id="message"></div>
-
-    <a href="/home">Назад до кабінету</a>
-    <a href="/logout">Вийти</a>
-
-   <script src="scripts/home.js"></script></body>
+    <div class="container mt-4">
+        <h1>Search Vehicle</h1>
+        <div class="form-group">
+            <input type="text" id="licensePlate" class="form-control" placeholder="Enter License Plate">
+        </div>
+        <button class="btn btn-primary" onclick="searchVehicle()">Search</button>
+        <div id="searchResult" class="mt-4"></div>
+    </div>
+    <script src="/scripts/search.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>

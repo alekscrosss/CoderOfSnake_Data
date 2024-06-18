@@ -4,20 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Entry Photo</title>
-    <link rel="stylesheet" href="/static/home.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h2>Upload Entry Photo</h2>
-    <form id="upload-form" class="upload-form" enctype="multipart/form-data" action="/entry_photo/upload-entry-photo" method="POST">
-        <input type="file" id="file" name="entry_photo" required><br>
-<!--        <input type="text" id="license_plate" name="license_plate" placeholder="License Plate" required><br>-->
-        <button type="submit">Upload</button>
-    </form>
-    <div id="message"></div>
-    <a href="/home">Назад до кабінету</a>
-    <a href="/logout">Вийти</a>
+    <div class="container mt-5">
+        <h2 class="text-center">Upload Entry Photo</h2>
+        <form id="upload-form" class="upload-form mt-4" enctype="multipart/form-data" action="/entry_photo/upload-entry-photo" method="POST">
+            <div class="form-group">
+                <label for="file">Choose File</label>
+                <input type="file" class="form-control" id="file" name="entry_photo" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Upload</button>
+        </form>
+        <div id="message" class="mt-3"></div>
+        <div class="text-center mt-4">
+            <a href="/home" class="btn btn-secondary">Back to Home</a>
+            <a href="/logout" class="btn btn-danger">Logout</a>
+        </div>
+    </div>
     <script src="scripts/upload_entry_photo.js"></script>
-
-
 </body>
 </html>
