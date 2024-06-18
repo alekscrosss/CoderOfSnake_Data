@@ -30,17 +30,17 @@ class ParkingRate(ParkingRateBase):
     class Config:
         from_attributes = True
 
-class BlacklistBase(BaseModel):
-    plate_id: int
-
-class BlacklistCreate(BlacklistBase):
-    pass
-
-class Blacklist(BlacklistBase):
+class Blacklist(BaseModel):
     id: int
+    plate_id: int
+    reason: Optional[str] = None
+    added_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
+
+class BlacklistCreate(BaseModel):
+    license_plate: str
 
 class ParkingHistory(BaseModel):
     id: int

@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(data => {
         if (data.role === 'admin') {
             document.getElementById('adminReports').style.display = 'block';
+            document.getElementById('blacklistAdmin').style.display = 'block';
         }
         loadParkingHistory(token);
     })
@@ -35,6 +36,7 @@ function loadParkingHistory(token) {
 
 function displayParkingHistory(parkingHistory) {
     const table = document.createElement('table');
+    table.classList.add('table', 'table-striped', 'table-bordered');
     const headerRow = document.createElement('tr');
 
     const headers = ['Vehicle Number', 'User Name', 'Entry Time', 'Exit Time', 'Payment Status', 'Amount Due', 'Is Registered'];
@@ -108,6 +110,7 @@ document.getElementById('usersDataBtn').addEventListener('click', () => {
 function displayCsvData(csvText) {
     const rows = csvText.split('\n').map(row => row.split(','));
     const table = document.createElement('table');
+    table.classList.add('table', 'table-striped', 'table-bordered');
     const headerRow = document.createElement('tr');
 
     rows[0].forEach(headerText => {
@@ -131,4 +134,54 @@ function displayCsvData(csvText) {
     const outputDiv = document.getElementById('output');
     outputDiv.innerHTML = '';
     outputDiv.appendChild(table);
+}
+
+function addToBlacklist() {
+    const plateId = document.getElementById('plateIdAdd').value.trim();
+    console.log("Adding to blacklist:", plateId); // Debug info
+    fetch('/admin/blacklist/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+        },
+        body: JSON.stringify({ license_plate: plateId })
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => { throw new Error(err.detail); });
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert('Vehicle added to blacklist');
+    })
+    .catch(error => {
+        console.error('Error adding to blacklist:', error); // Debug info
+        alert('Error adding to blacklist: ' + error.message);
+    });
+}
+
+function removeFromBlacklist() {
+    const plateId = document.getElementById('plateIdRemove').value.trim();
+    console.log("Removing from blacklist:", plateId); // Debug info
+    fetch(`/admin/blacklist/${plateId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => { throw new Error(err.detail); });
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert('Vehicle removed from blacklist');
+    })
+    .catch(error => {
+        console.error('Error removing from blacklist:', error); // Debug info
+        alert('Error removing from blacklist: ' + error.message);
+    });
 }

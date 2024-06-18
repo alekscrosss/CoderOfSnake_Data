@@ -3,28 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Photos</title>
+    <title>Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/home.css">
 </head>
-<body>
-    <button-upload-entry-photos onclick="window.location.href='/upload-entry-photo'">Upload Entry Photo</button-upload-entry-photos>
-    <button-upload-exit-photos onclick="window.location.href='/upload-exit-photo'">Upload Exit Photo</button-upload-exit-photos>
-    <button-payment onclick="window.location.href='/payment'">Make Payment</button-payment>
-    <button-search onclick="window.location.href='/search'">Search</button-search>
-    <a href="/logout" class="logout-button">Logout</a>
+<body class="bg-light">
+    <div class="container mt-4">
+        <div class="row mb-3">
+            <div class="col">
+                <button class="btn btn-success w-100" onclick="window.location.href='/upload-entry-photo'">Upload Entry Photo</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-success w-100" onclick="window.location.href='/upload-exit-photo'">Upload Exit Photo</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-success w-100" onclick="window.location.href='/payment'">Make Payment</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-success w-100" onclick="window.location.href='/search'">Search</button>
+            </div>
+            <div class="col">
+                <a href="/logout" class="btn btn-outline-danger w-100">Logout</a>
+            </div>
+        </div>
 
-    <div class="container" id="adminReports" style="display: none;">
-        <h1>Admin Reports</h1>
-        <button id="allDataBtn">Generate Report for All Data</button>
-        <button id="usersDataBtn">Generate Report for Users</button>
-        <div id="output" class="output"></div>
-    </div>
+        <div class="card mb-4" id="adminReports" style="display: none;">
+            <div class="card-body">
+                <h3 class="card-title">Admin Reports</h3>
+                <div class="row mb-3">
+                    <div class="col">
+                        <button id="allDataBtn" class="btn btn-primary w-100">Generate Report for All Data</button>
+                    </div>
+                    <div class="col">
+                        <button id="usersDataBtn" class="btn btn-primary w-100">Generate Report for Users</button>
+                    </div>
+                </div>
+                <div id="output" class="output"></div>
+            </div>
+        </div>
 
-    <div class="container">
-        <h1>Parking History</h1>
-        <div id="parkingHistoryOutput"></div>
+        <div class="card mb-4" id="blacklistAdmin" style="display: none;">
+            <div class="card-body">
+                <h3 class="card-title">Blacklist Management</h3>
+                <div class="row">
+                    <div class="col">
+                        <form id="addBlacklistForm" class="form-inline">
+                            <input type="text" id="plateIdAdd" class="form-control mb-2 mr-sm-2" placeholder="Enter Plate ID to Add">
+                            <button type="button" class="btn btn-warning mb-2" onclick="addToBlacklist()">Add to Blacklist</button>
+                        </form>
+                    </div>
+                    <div class="col">
+                        <form id="removeBlacklistForm" class="form-inline">
+                            <input type="text" id="plateIdRemove" class="form-control mb-2 mr-sm-2" placeholder="Enter Plate ID to Remove">
+                            <button type="button" class="btn btn-danger mb-2" onclick="removeFromBlacklist()">Remove from Blacklist</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Parking History</h3>
+                <div id="parkingHistoryOutput"></div>
+            </div>
+        </div>
     </div>
 
     <script src="/scripts/home.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
