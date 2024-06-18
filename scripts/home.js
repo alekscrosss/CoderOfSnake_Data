@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.getElementById('allDataBtn').addEventListener('click', () => {
-    fetch('/reports/make-admin-reports-all_data/', {
+    fetch('/reports/reports/make-admin-reports-all_data/', {
         method: 'POST'
     })
     .then(response => response.blob())
@@ -30,7 +30,7 @@ document.getElementById('allDataBtn').addEventListener('click', () => {
 });
 
 document.getElementById('usersDataBtn').addEventListener('click', () => {
-    fetch('/reports/make-admin-reports-users/', {
+    fetch('/reports/reports/make-admin-reports-users/', {
         method: 'POST'
     })
     .then(response => response.blob())
