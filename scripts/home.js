@@ -1,5 +1,5 @@
 document.getElementById('allDataBtn').addEventListener('click', () => {
-    fetch('/reports/reports/make-admin-repots-all_data/', {
+    fetch('/reports/reports/make-admin-reports-all_data/', {
         method: 'POST'
     })
     .then(response => response.blob())

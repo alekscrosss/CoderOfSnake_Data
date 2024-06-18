@@ -50,7 +50,7 @@
             font-size: 16px; /* Change this to your desired font size */
             text-decoration: none; /* Removes underline from links */
             position: absolute;
-            top: 220px; /* Adjust top position */
+            top: 50px; /* Adjust top position */
             left: 50px;
             background-color: #45a049;
             cursor: pointer;
@@ -62,7 +62,7 @@
             font-size: 16px; /* Change this to your desired font size */
             text-decoration: none; /* Removes underline from links */
             position: absolute;
-            top: 220px; /* Adjust top position */
+            top: 50px; /* Adjust top position */
             left: 250px;
             background-color: #45a049;
             cursor: pointer;
@@ -74,8 +74,19 @@
             font-size: 16px; /* Change this to your desired font size */
             text-decoration: none; /* Removes underline from links */
             position: absolute;
-            top: 220px; /* Adjust top position */
-            left: 450px;
+            top: 50px; /* Adjust top position */
+            left: 430px;
+            background-color: #45a049;
+            cursor: pointer;
+        }
+        button-search {
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px; /* Change this to your desired font size */
+            text-decoration: none; /* Removes underline from links */
+            position: absolute;
+            top: 50px; /* Adjust top position */
+            left: 590px;
             background-color: #45a049;
             cursor: pointer;
         }
@@ -94,7 +105,7 @@
             font-size: 25px;
             text-decoration: none;
             position: absolute;
-            top: 140px; /* Adjust top position */
+            top: 60px; /* Adjust top position */
             left: 40px;
             color: #333;
             margin-bottom: 20px;
