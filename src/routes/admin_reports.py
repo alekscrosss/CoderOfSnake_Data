@@ -8,9 +8,9 @@ from src.schemas.schemas_user import User
 
 router = APIRouter(prefix="/reports", tags=['admin_reports'])
 
-
 @router.post("/make-admin-reports-all_data/")
-async def admin_report_all(current_admin: User = Depends(get_current_user)):
+async def admin_report_all():
+                # (current_admin: User = Depends(get_current_user)):
     current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     report_name = f'all_users_for_admin_{current_datetime}.csv'
     output_folder = 'reports_uploads'
@@ -28,7 +28,6 @@ async def admin_report_all(current_admin: User = Depends(get_current_user)):
 
     file_path = os.path.join(output_folder, report_name)
     return FileResponse(path=file_path, filename=report_name, media_type='text/csv')
-
 
 @router.post("/make-admin-reports-users/")
 async def admin_report_users(current_admin: User = Depends(get_current_user)):

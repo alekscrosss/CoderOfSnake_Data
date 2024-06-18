@@ -1,5 +1,7 @@
 import os
 import enum
+
+from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String, create_engine, ForeignKey, DateTime, Boolean, Enum, DECIMAL, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
@@ -135,3 +137,7 @@ Base.metadata.create_all(bind=engine)
 
 
 
+class AmountDueResponse(BaseModel):
+    success: bool
+    amount_due: float = None
+    message: str = None

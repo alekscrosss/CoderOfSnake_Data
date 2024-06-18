@@ -86,6 +86,10 @@ async def home(request: Request):
 async def home(request: Request):
     return templates.TemplateResponse('payment.html', {"request": request, "title": "payment"})
 
+@app.get('/search')
+async def home(request: Request):
+    return templates.TemplateResponse('search.html', {"request": request, "title": "search"})
+
 
 @app.get("/api/healthchecker")
 def healthchecker(db: Session = Depends(get_db)):
