@@ -18,6 +18,16 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+# Fetch the Redis host from environment variable
+REDIS_HOST = os.environ.get("REDIS_HOST")
+
+# Fetch the Redis port from environment variable, defaulting to 6380 if not set
+REDIS_PORT = int(os.environ.get("REDIS_PORT", 11951))
+REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD")
+# Create the Redis client
+redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
+
+
 # Монтування папки static
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory='templates')

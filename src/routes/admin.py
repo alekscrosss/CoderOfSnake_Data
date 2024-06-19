@@ -41,3 +41,11 @@ def remove_from_blacklist(license_plate: str, db: Session = Depends(get_db), cur
     if blacklist_entry is None:
         raise HTTPException(status_code=404, detail="Blacklist entry not found")
     return blacklist_entry
+
+@router.post("/rates/", response_model=schemas_user.ParkingRate)
+def set_parking_rate(rate: schemas_user.ParkingRateCreate, db: Session = Depends(get_db), current_user: schemas_user.User = Depends(get_current_active_user)):
+    return crud_vehicle.set_parking_rate(db, rate)
+
+@router.get("/rates/", response_model=List[schemas_user.ParkingRate])
+def get_parking_rates(db: Session = Depends(get_db), current_user: schemas_user.User = Depends(get_current_active_user)):
+    return crud_vehicle.get_parking_rates(db)
