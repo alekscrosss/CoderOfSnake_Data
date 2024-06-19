@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('adminReports').style.display = 'block';
             document.getElementById('blacklistAdmin').style.display = 'block';
             document.getElementById('searchButtonContainer').style.display = 'block';
-            document.getElementById('vehiclelistAdmin').style.display = 'block';
         }
         loadParkingHistory(token);
     })
@@ -185,55 +184,5 @@ function removeFromBlacklist() {
     .catch(error => {
         console.error('Error removing from blacklist:', error); // Debug info
         alert('Error removing from blacklist: ' + error.message);
-    });
-}
-function addVehicle() {
-    const plateId = document.getElementById('vehiclePlateIdAdd').value.trim();
-    fetch('/admin/vehicles/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + localStorage.getItem('access_token')
-        },
-        body: JSON.stringify({ license_plate: plateId })
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => { throw new Error(err.detail); });
-        }
-        return response.json();
-    })
-    .then(data => {
-        alert('Vehicle added successfully');
-        // Optionally, update UI or perform additional actions after adding the vehicle
-    })
-    .catch(error => {
-        console.error('Error adding vehicle:', error);
-        alert('Error adding vehicle: ' + error.message);
-    });
-}
-
-
-function removeVehicle() {
-    const plateId = document.getElementById('vehiclePlateIdRemove').value.trim();
-    fetch(`/admin/vehicles/${plateId}`, {
-        method: 'DELETE',
-        headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('access_token')
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => { throw new Error(err.detail); });
-        }
-        return response.json();
-    })
-    .then(data => {
-        alert('Vehicle removed successfully');
-        // Optionally, update UI or perform additional actions after removing the vehicle
-    })
-    .catch(error => {
-        console.error('Error removing vehicle:', error);
-        alert('Error removing vehicle: ' + error.message);
     });
 }
